@@ -1,126 +1,115 @@
 const pathModule = require('path')
 const {
 	GraphQLBoolean,
-	GraphQLInt,
 	GraphQLList,
-	GraphQLNonNull,
+	GraphQLInt,
 	GraphQLObjectType,
 	GraphQLSchema,
 	GraphQLString,
 } = require('graphql')
+const {
+	fromGlobalId,
+	globalIdField,
+	nodeDefinitions,
+} = require('graphql-relay')
 
-const fetch = require('./fetch')
+const fetch = require('./database/fetch')
+const database = require('./database')
+
+const { nodeInterface, nodeField } = nodeDefinitions(
+	(globalId) => {
+		const { type, id } = fromGlobalId(globalId);
+		return database.getNode[type](id);
+	},
+	(obj) => schema._typeMap[obj._typeName]
+)
+
+const lazyField = (type) => ({
+	type: type,
+	resolve: (obj, a, b, info) => {
+		const prop = info.fieldName
+		const type = info.parentType.name
+
+		return typeof obj[prop] !== undefined ? obj[prop] : database.getNode[type](obj.id).get(prop)
+	}
+})
 
 const Team = new GraphQLObjectType({
 	name: 'Team',
+	interfaces: [ nodeInterface ],
+	fields: () => ({
+		id: globalIdField(),
+		name: lazyField(GraphQLString),
+		fullName: lazyField(GraphQLString),
+		history: {
+			type: new GraphQLList(Match),
+			resolve: database.team.getHistory
+		}
+	}),
+})
+
+const UpcomingMatch = new GraphQLObjectType({
+	name: 'UpcomingMatch',
 	fields: {
-		name: { type: GraphQLString },
-		url: { type: GraphQLString },
+		home: { type: Team },
+		away: { type: Team },
+		timestamp: lazyField(GraphQLString),
 	},
 })
 
 const Match = new GraphQLObjectType({
 	name: 'Match',
+	interfaces: [ nodeInterface ],
 	fields: {
+		id: globalIdField(),
 		home: { type: Team },
 		away: { type: Team },
-		timestamp: { type: GraphQLString },
+		homeScore: lazyField(GraphQLInt),
+		awayScore: lazyField(GraphQLInt),
+		postponed: lazyField(GraphQLBoolean),
+		timestamp: lazyField(GraphQLString),
 	},
 })
 
 const Season = new GraphQLObjectType({
 	name: 'Season',
+	interfaces: [ nodeInterface ],
 	fields: {
-		name: { type: GraphQLString },
-		url: { type: GraphQLString },
+		id: globalIdField(),
+		name: lazyField(GraphQLString),
+		upcomingMatches: {
+			type: new GraphQLList(UpcomingMatch),
+			resolve: database.season.getUpcomingMatches
+		},
 		matches: {
 			type: new GraphQLList(Match),
-			args: {
-				upcoming: { type: new GraphQLNonNull(GraphQLBoolean) }
-			},
-			resolve: (obj, args) => {
-				if (args.upcoming) {
-					return fetch(pathModule.join(obj.url, 'fixtures')).then(($) => {
-						return $('#statLF table.stat tr:not(.timezonebar)').toArray()
-						.map((match) => {
-							try {
-								const homeTeam = $('.team2', match).text() || $('.team4', match).text()
-								const homeUrl = $('.team2 a', match).attr('href') || $('.team4 a', match).attr('href')
-								const awayTeam = $('.team3', match).text() || $('.team5', match).text()
-								const awayUrl = $('.team3 a', match).attr('href') || $('.team5 a', match).attr('href')
-								const timestamp = $('.dymek', match).attr('data-timestamp') * 1000
-
-								return {
-									home: {
-										name: homeTeam,
-										url: homeUrl,
-									},
-									away: {
-										name: awayTeam,
-										url: awayUrl,
-									},
-									timestamp: timestamp
-								}
-							} catch (e) {
-								throw new Error("Error " + e + " Couldn't parse " + $(match).html())
-							}
-						})
-					})
-				} else {
-					throw new Error("Unimplemented")
-				}
-			}
+			resolve: database.season.getMatches
 		}
 	},
 })
 
 const League = new GraphQLObjectType({
 	name: 'League',
+	interfaces: [ nodeInterface ],
 	fields: {
-		id: { type: GraphQLInt },
-		name: { type: GraphQLString },
-		url: { type: GraphQLString },
+		id: globalIdField(),
+		name: lazyField(GraphQLString),
 		seasons: {
 			type: new GraphQLList(Season),
-			resolve: (obj) => {
-				return fetch(obj.url).then(($) => {
-					return $('div.desc select option').toArray().map($)
-					.map(($el) => {
-						return {
-							name: $el.text().trim(),
-							url: $el.attr('value'),
-						}
-					})
-				})
-			}
+			resolve: database.league.getSeasons
 		}
 	},
 })
 
 const Country = new GraphQLObjectType({
 	name: 'Country',
+	interfaces: [ nodeInterface ],
 	fields: {
-		id: { type: GraphQLInt },
-		name: { type: GraphQLString },
-		urlname: { type: GraphQLString },
+		id: globalIdField(),
+		name: lazyField(GraphQLString),
 		leagues: {
 			type: new GraphQLList(League),
-			args: {
-				id: { type: GraphQLInt }
-			},
-			resolve: (obj, args) => {
-				return fetch('ml/subLeagues/?CountryId=' + obj.id).then(($) => {
-					return $('li.league').toArray().map($)
-					.map(($el) => {
-						return {
-							id: Number($el.attr('class').split(' ').filter((c) => /l[0-9]+/.test(c))[0].slice(1)),
-							name: $el.text().trim(),
-							url: $('a', $el).attr('href'),
-						}
-					})
-					.filter((obj) => !args.id || obj.id == args.id)
-				})
-			}
+			resolve: database.country.getLeagues
 		}
 	},
 })
@@ -130,25 +119,60 @@ const QueryType = new GraphQLObjectType({
 	fields: {
 		countries: {
 			type: new GraphQLList(Country),
+			resolve: database.country.getAll
+		},
+		country: {
+			type: Country,
 			args: {
-				id: { type: GraphQLInt }
+				id: { type: GraphQLString }
 			},
 			resolve: (obj, args) => {
-				return fetch('/').then(($) => {
-					return $('.menu .national.list .countries > li').toArray().map($)
-					.map(($el) => {
-						return {
-							id: Number($el.attr('data-id')),
-							name: $el.text().trim(),
-							urlname: $('a', $el).attr('href').split('/')[2],
-							type: 'NATIONAL',
-						}
-					})
-					.filter((obj) => !args.id || obj.id == args.id)
-				})
+				const { id } = fromGlobalId(args.id)
+				return database.country.get(id)
 			}
-		}
+		},
+		league: {
+			type: League,
+			args: {
+				id: { type: GraphQLString }
+			},
+			resolve: (obj, args) => {
+				const { id } = fromGlobalId(args.id)
+				return database.league.get(id)
+			}
+		},
+		season: {
+			type: Season,
+			args: {
+				id: { type: GraphQLString }
+			},
+			resolve: (obj, args) => {
+				const { id } = fromGlobalId(args.id)
+				return database.season.get(id)
+			}
+		},
+		match: {
+			type: Season,
+			args: {
+				id: { type: GraphQLString }
+			},
+			resolve: (obj, args) => {
+				const { id } = fromGlobalId(args.id)
+				return database.match.get(id)
+			}
+		},
+		team: {
+			type: Team,
+			args: {
+				id: { type: GraphQLString }
+			},
+			resolve: (obj, args) => {
+				const { id } = fromGlobalId(args.id)
+				return database.team.get(id)
+			}
+		},
+		node: nodeField
 	},
 })
 
-module.exports = new GraphQLSchema({ query: QueryType })
+module.exports = schema = new GraphQLSchema({ query: QueryType })
