@@ -2,78 +2,84 @@ const React = require('react')
 const { graphql, QueryRenderer } = require('react-relay')
 const {
 	AppBar,
-	Icon,
-	IconButton,
-	List,
-	ListItem,
-	ListItemSecondaryAction,
+	CircularProgress,
 	Toolbar,
 	Typography,
 } = require('material-ui')
 
 const relay = require('./relay')
+const CountryList = require('./CountryList')
+const Country = require('./Country')
 
 class App extends React.Component {
+	state = {
+		country: null
+	}
+
+	handleCountryClick(countryId) {
+		this.setState({country: countryId})
+	}
+
 	renderState = ({ error, props, retry }) => {
+		const title = (
+			<AppBar position="static">
+				<Toolbar>
+					<Typography type="title" color="inherit">
+						Sphinx
+					</Typography>
+				</Toolbar>
+			</AppBar>
+		)
+
 		if (props) {
+			let page = null
+			if (this.state.country == null) {
+				 page = <CountryList data={props} countryClickHandler={(id) => this.handleCountryClick(id)} />
+			} else {
+				page = <Country country={props.country} />
+			}
+
 			return (
 				<div>
-					<AppBar position="static">
-						<Toolbar>
-							<Typography type="title" color="inherit">
-								Sphinx
-							</Typography>
-						</Toolbar>
-					</AppBar>
-					 <Typography type="headline">
-						Pinned Countries
-					</Typography>
-					<List>{
-						props.countries.map((country) => (
-							<ListItem button>
-								{country.name}
-								<ListItemSecondaryAction>
-									<IconButton>
-										 <Icon color="action">delete</Icon>
-									</IconButton>
-								</ListItemSecondaryAction>
-							</ListItem>
-						)).slice(0, 2)
-					}</List>
-					 <Typography type="headline">
-						Countries
-					</Typography>
-					<List>{
-						props.countries.map((country) => (
-							<ListItem button>
-								{country.name}
-								<ListItemSecondaryAction>
-									<IconButton>
-										 <Icon color="action">bookmark</Icon>
-									</IconButton>
-								</ListItemSecondaryAction>
-							</ListItem>
-						))
-					}</List>
+					{title}
+					{page}
 				</div>
 			)
 		} else {
-			return <p>Loading</p>
+			return (
+				<div>
+					{title}
+					<CircularProgress />
+				</div>
+			)
 		}
 	}
 
 	render() {
+		let query = null
+		if (this.state.country == null) {
+			query = graphql`
+				query App_CountriesQuery {
+					...CountryList
+				}
+			`
+		} else {
+			query = graphql`
+				query App_CountryQuery($countryId: String) {
+					country(id: $countryId) {
+						...Country_country
+					}
+				}
+			`
+		}
+
 		return (
 			<QueryRenderer
 				environment={relay}
-				query={graphql`
-					query App_CountriesQuery {
-						countries {
-							id
-							name
-						}
-					}
-				`}
+				query={query}
+				variables={{
+					countryId: this.state.country
+				}}
 				render={this.renderState}
 			/>
 		)
