@@ -1,0 +1,67 @@
+type Country implements Node {
+  # The ID of an object
+  id: ID!
+  name: String
+  leagues: [League]
+}
+
+type League implements Node {
+  # The ID of an object
+  id: ID!
+  name: String
+  seasons: [Season]
+}
+
+type Match implements Node {
+  # The ID of an object
+  id: ID!
+  home: Team
+  away: Team
+  homeScore: Int
+  awayScore: Int
+  postponed: Boolean
+  timestamp: String
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+type Query {
+  countries: [Country]
+  country(id: String): Country
+  league(id: String): League
+  season(id: String): Season
+  match(id: String): Season
+  team(id: String): Team
+
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+}
+
+type Season implements Node {
+  # The ID of an object
+  id: ID!
+  name: String
+  upcomingMatches: [UpcomingMatch]
+  matches: [Match]
+}
+
+type Team implements Node {
+  # The ID of an object
+  id: ID!
+  name: String
+  fullName: String
+  history: [Match]
+}
+
+type UpcomingMatch {
+  home: Team
+  away: Team
+  timestamp: String
+}
