@@ -5,26 +5,26 @@ const {
 	ListItem,
 } = require('material-ui')
 
-class LeagueList extends React.Component {
+class SeasonList extends React.Component {
 	render() {
-		const leagues = this.props.data.leagues;
+		const seasons = this.props.data.seasons;
 		return (
 			<List>{
-				leagues.map((league, i) => {
-					return <ListItem button key={i} onClick={() => this.props.leagueClickHandler(league.id)}>
-						{league.name}
+				seasons.map((season, i) => (
+					<ListItem button key={i}>
+						{season.name}
 					</ListItem>
-				})
+				))
 			}</List>
 		)
 	}
 }
 
 module.exports = createFragmentContainer(
-	LeagueList,
+	SeasonList,
 	graphql`
-		fragment LeagueList on Country {
-			leagues {
+		fragment SeasonList on League {
+			seasons {
 				id
 				name
 			}

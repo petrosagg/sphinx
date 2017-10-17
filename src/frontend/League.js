@@ -5,19 +5,19 @@ const {
 	Typography,
 } = require('material-ui')
 
-const LeagueList = require('./LeagueList')
+const SeasonList = require('./SeasonList')
 
-class Country extends React.Component {
+class League extends React.Component {
 	render() {
-		const country = this.props.country;
+		const league = this.props.league;
 		return (
 			<div>
 				<Grid container>
 					<Grid item>
 						 <Typography type="headline">
-							{country.name}
+							{league.name}
 						</Typography>
-						<LeagueList data={country} leagueClickHandler={this.props.leagueClickHandler} />
+						<SeasonList data={league} />
 					</Grid>
 				</Grid>
 			</div>
@@ -26,11 +26,11 @@ class Country extends React.Component {
 }
 
 module.exports = createFragmentContainer(
-	Country,
+	League,
 	graphql`
-		fragment Country_country on Country {
+		fragment League_league on League {
 			name
-			...LeagueList
+			...SeasonList
 		}
 	`,
 );
