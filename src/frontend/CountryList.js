@@ -1,6 +1,6 @@
-const React = require('react')
-const { graphql, createFragmentContainer } = require('react-relay')
-const {
+import React from 'react'
+import { graphql, createFragmentContainer } from 'react-relay'
+import {
 	AppBar,
 	CircularProgress,
 	Icon,
@@ -11,7 +11,7 @@ const {
 	ListItemSecondaryAction,
 	Toolbar,
 	Typography,
-} = require('material-ui')
+} from 'material-ui'
 
 class CountryList extends React.Component {
 	state = {
@@ -74,7 +74,7 @@ class CountryList extends React.Component {
 	}
 }
 
-module.exports = createFragmentContainer(
+export default createFragmentContainer(
 	CountryList,
 	graphql`
 		fragment CountryList on Query {

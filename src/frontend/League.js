@@ -1,11 +1,11 @@
-const React = require('react')
-const { graphql, createFragmentContainer } = require('react-relay')
-const {
+import React from 'react'
+import { graphql, createFragmentContainer } from 'react-relay'
+import {
 	Grid,
 	Typography,
-} = require('material-ui')
+} from 'material-ui'
 
-const SeasonList = require('./SeasonList')
+import SeasonList from './SeasonList'
 
 class League extends React.Component {
 	render() {
@@ -25,7 +25,7 @@ class League extends React.Component {
 	}
 }
 
-module.exports = createFragmentContainer(
+export default createFragmentContainer(
 	League,
 	graphql`
 		fragment League_league on League {

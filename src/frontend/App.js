@@ -1,18 +1,18 @@
-const React = require('react')
-const { graphql, QueryRenderer } = require('react-relay')
-const {
+import React from 'react'
+import { graphql, QueryRenderer } from 'react-relay'
+import {
 	AppBar,
 	CircularProgress,
 	Toolbar,
 	Typography,
-} = require('material-ui')
+} from 'material-ui'
 
-const relay = require('./relay')
-const CountryList = require('./CountryList')
-const Country = require('./Country')
-const League = require('./League')
+import relay from './relay'
+import CountryList from './CountryList'
+import Country from './Country'
+import League from './League'
 
-class App extends React.Component {
+export default class App extends React.Component {
 	state = {
 		country: null,
 		league: null,
@@ -102,5 +102,3 @@ class App extends React.Component {
 		)
 	}
 }
-
-module.exports = App

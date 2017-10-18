@@ -1,4 +1,4 @@
-const { Environment, Network, RecordSource, Store } = require('relay-runtime')
+import { Environment, Network, RecordSource, Store } from 'relay-runtime'
 
 const fetchQuery = (operation, variables) => {
 	return fetch('/graphql', {
@@ -14,7 +14,7 @@ const fetchQuery = (operation, variables) => {
 	}).then(response => response.json())
 }
 
-module.exports = new Environment({
+export default new Environment({
 	network: Network.create(fetchQuery),
 	store: new Store(new RecordSource()),
 })
