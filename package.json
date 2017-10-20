@@ -5,7 +5,7 @@
   "main": "schema.js",
   "scripts": {
     "start": "node src/server.js",
-    "relay": "relay-compiler --src ./src/frontend --schema ./src/frontend/schema.graphql",
+    "relay": "relay-compiler --src ./src/web-ui --schema ./src/web-ui/schema.graphql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

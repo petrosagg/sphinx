@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-	entry: './src/frontend/index.js',
+	entry: './src/web-ui/index.js',
 	module: {
 		rules: [
 			{
@@ -14,7 +14,7 @@ module.exports = {
 		]
 	},
 	devServer: {
-		contentBase: './src/frontend/static',
+		contentBase: './src/web-ui/static',
 		proxy: {
 			'/graphql': 'http://localhost:4000'
 		}
