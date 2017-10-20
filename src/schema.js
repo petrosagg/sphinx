@@ -13,16 +13,14 @@ const {
 	nodeDefinitions,
 } = require('graphql-relay')
 
-const fetch = require('./database/fetch')
 const database = require('./database')
 
-const { nodeInterface, nodeField } = nodeDefinitions(
-	(globalId) => {
-		const { type, id } = fromGlobalId(globalId);
-		return database.getNode[type](id);
-	},
-	(obj) => schema._typeMap[obj._typeName]
-)
+const resolveNode = (globalId) => {
+	const { type, id } = fromGlobalId(globalId)
+	return database.getNode[type](id)
+}
+
+const { nodeInterface, nodeField } = nodeDefinitions(resolveNode, (obj) => schema._typeMap[obj._typeName])
 
 const lazyField = (type) => ({
 	type: type,
@@ -126,50 +124,35 @@ const QueryType = new GraphQLObjectType({
 			args: {
 				id: { type: GraphQLString }
 			},
-			resolve: (obj, args) => {
-				const { id } = fromGlobalId(args.id)
-				return database.country.get(id)
-			}
+			resolve: (obj, args) => resolveNode(args.id)
 		},
 		league: {
 			type: League,
 			args: {
 				id: { type: GraphQLString }
 			},
-			resolve: (obj, args) => {
-				const { id } = fromGlobalId(args.id)
-				return database.league.get(id)
-			}
+			resolve: (obj, args) => resolveNode(args.id)
 		},
 		season: {
 			type: Season,
 			args: {
 				id: { type: GraphQLString }
 			},
-			resolve: (obj, args) => {
-				const { id } = fromGlobalId(args.id)
-				return database.season.get(id)
-			}
+			resolve: (obj, args) => resolveNode(args.id)
 		},
 		match: {
 			type: Season,
 			args: {
 				id: { type: GraphQLString }
 			},
-			resolve: (obj, args) => {
-				const { id } = fromGlobalId(args.id)
-				return database.match.get(id)
-			}
+			resolve: (obj, args) => resolveNode(args.id)
 		},
 		team: {
 			type: Team,
 			args: {
 				id: { type: GraphQLString }
 			},
-			resolve: (obj, args) => {
-				const { id } = fromGlobalId(args.id)
-				return database.team.get(id)
-			}
+			resolve: (obj, args) => resolveNode(args.id)
 		},
 		node: nodeField
 	},
