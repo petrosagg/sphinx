@@ -7,7 +7,7 @@ import {
 	Typography,
 } from 'material-ui'
 
-import relay from './relay'
+import relay from '../relay'
 import CountryList from './CountryList'
 import Country from './Country'
 import League from './League'
