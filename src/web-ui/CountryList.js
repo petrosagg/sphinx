@@ -31,6 +31,9 @@ class CountryList extends React.Component {
 
 	render() {
 		const countries = this.props.data.countries;
+		if (countries === null) {
+			return <div>Could not load data</div>
+		}
 		return (
 			<div>
 				<Grid container>
