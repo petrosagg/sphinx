@@ -3,32 +3,14 @@ import { graphql, createFragmentContainer } from 'react-relay'
 import {
 	AppBar,
 	CircularProgress,
-	Icon,
 	Grid,
-	IconButton,
 	List,
 	ListItem,
-	ListItemSecondaryAction,
 	Toolbar,
 	Typography,
 } from 'material-ui'
 
 class CountryList extends React.Component {
-	state = {
-		pinnedCountries: []
-	}
-
-	add(country) {
-		this.state.pinnedCountries.push(country)
-		this.setState({ pinnedCountries: this.state.pinnedCountries })
-	}
-
-	remove(country) {
-		const i = this.state.pinnedCountries.indexOf(country)
-		this.state.pinnedCountries.splice(i, 1)
-		this.setState({ pinnedCountries: this.state.pinnedCountries })
-	}
-
 	render() {
 		const countries = this.props.data.countries;
 		if (countries === null) {
@@ -45,28 +27,6 @@ class CountryList extends React.Component {
 							countries.map((country, i) => (
 								<ListItem button key={i} onClick={() => this.props.countryClickHandler(country.id)}>
 									{country.name}
-									<ListItemSecondaryAction>
-										<IconButton onClick={() => this.add(country)}>
-											 <Icon color="action">bookmark</Icon>
-										</IconButton>
-									</ListItemSecondaryAction>
-								</ListItem>
-							))
-						}</List>
-					</Grid>
-					<Grid xs="4" item>
-						 <Typography type="headline">
-							Pinned Countries
-						</Typography>
-						<List>{
-							this.state.pinnedCountries.map((country, i) => (
-								<ListItem button key={i}>
-									{country.name}
-									<ListItemSecondaryAction>
-										<IconButton onClick={() => this.remove(country)}>
-											 <Icon color="action">delete</Icon>
-										</IconButton>
-									</ListItemSecondaryAction>
 								</ListItem>
 							))
 						}</List>
