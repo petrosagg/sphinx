@@ -11,26 +11,32 @@ import relay from '../relay'
 import CountryList from './CountryList'
 import Country from './Country'
 import League from './League'
+import Season from './Season'
 
 export default class App extends React.Component {
 	state = {
 		country: null,
 		league: null,
+		season: null,
 	}
 
 	handleCountryClick(countryId) {
-		this.setState({country: countryId, league: null})
+		this.setState({country: countryId, league: null, season: null})
 	}
 
 	handleLeagueClick(leagueId) {
-		this.setState({country: null, league: leagueId})
+		this.setState({country: null, league: leagueId, season: null})
+	}
+
+	handleSeasonClick(seasonId) {
+		this.setState({country: null, league: null, season: seasonId})
 	}
 
 	renderState = ({ error, props, retry }) => {
 		const title = (
 			<AppBar position="static">
 				<Toolbar>
-					<Typography type="title" color="inherit" onClick={() => this.setState({country: null, league: null})}>
+					<Typography type="title" color="inherit" onClick={() => this.setState({country: null, league: null, season: null})}>
 						Sphinx
 					</Typography>
 				</Toolbar>
@@ -42,7 +48,9 @@ export default class App extends React.Component {
 			if (this.state.country) {
 				page = <Country country={props.country} leagueClickHandler={(id) => this.handleLeagueClick(id)}/>
 			} else if (this.state.league) {
-				page = <League league={props.league} />
+				page = <League league={props.league} seasonClickHandler={(id) => this.handleSeasonClick(id)}/>
+			} else if (this.state.season) {
+				page = <Season season={props.season} />
 			} else {
 				page = <CountryList data={props} countryClickHandler={(id) => this.handleCountryClick(id)} />
 			}
@@ -81,6 +89,14 @@ export default class App extends React.Component {
 					}
 				}
 			`
+		} else if (this.state.season) {
+			query = graphql`
+				query App_SeasonQuery($seasonId: String) {
+					season(id: $seasonId) {
+						...Season_season
+					}
+				}
+			`
 		} else {
 			query = graphql`
 				query App_CountriesQuery {
@@ -96,6 +112,7 @@ export default class App extends React.Component {
 				variables={{
 					countryId: this.state.country,
 					leagueId: this.state.league,
+					seasonId: this.state.season,
 				}}
 				render={this.renderState}
 			/>

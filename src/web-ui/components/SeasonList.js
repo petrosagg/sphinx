@@ -11,7 +11,7 @@ class SeasonList extends React.Component {
 		return (
 			<List>{
 				seasons.map((season, i) => (
-					<ListItem button key={i}>
+					<ListItem button key={i} onClick={() => this.props.seasonClickHandler(season.id)}>
 						{season.name}
 					</ListItem>
 				))

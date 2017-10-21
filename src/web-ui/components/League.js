@@ -20,7 +20,7 @@ class League extends React.Component {
 							{league.name}
 						</Typography>
 						<Divider />
-						<SeasonList data={league} />
+						<SeasonList data={league} seasonClickHandler={this.props.seasonClickHandler} />
 					</Paper>
 				</Grid>
 			</Grid>

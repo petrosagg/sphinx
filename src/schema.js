@@ -51,7 +51,7 @@ const UpcomingMatch = new GraphQLObjectType({
 	fields: {
 		home: { type: Team },
 		away: { type: Team },
-		timestamp: lazyField(GraphQLString),
+		timestamp: lazyField(GraphQLInt),
 	},
 })
 
@@ -65,7 +65,7 @@ const Match = new GraphQLObjectType({
 		homeScore: lazyField(GraphQLInt),
 		awayScore: lazyField(GraphQLInt),
 		postponed: lazyField(GraphQLBoolean),
-		timestamp: lazyField(GraphQLString),
+		timestamp: lazyField(GraphQLInt),
 	},
 })
 

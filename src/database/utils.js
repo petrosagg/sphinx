@@ -21,7 +21,7 @@ exports.parseMatch = ($, match) => {
 		const homeUrl = $('.team2 a', match).attr('href') || $('.team4 a', match).attr('href')
 		const awayTeam = $('.team3', match).text() || $('.team5', match).text()
 		const awayUrl = $('.team3 a', match).attr('href') || $('.team5 a', match).attr('href')
-		const timestamp = $('.data.timezone', match).attr('data-timestamp') * 1000
+		const timestamp = $('.data.timezone', match).attr('data-timestamp')
 
 		const url = $('.dash a.matchAction', match).attr('href')
 		const [ postponed, scoreHome, scoreAway ] = parseScore($('.dash', match).text())
