@@ -1,7 +1,9 @@
 import React from 'react'
 import { graphql, createFragmentContainer } from 'react-relay'
 import {
+	Divider,
 	Grid,
+	Paper,
 	Typography,
 } from 'material-ui'
 
@@ -11,16 +13,17 @@ class Country extends React.Component {
 	render() {
 		const country = this.props.country;
 		return (
-			<div>
-				<Grid container>
-					<Grid item>
-						 <Typography type="headline">
+			<Grid justify="center" spacing={0} container>
+				<Grid xs={6} item>
+					<Paper>
+						<Typography type="headline">
 							{country.name}
 						</Typography>
+						<Divider />
 						<LeagueList data={country} leagueClickHandler={this.props.leagueClickHandler} />
-					</Grid>
+					</Paper>
 				</Grid>
-			</div>
+			</Grid>
 		)
 	}
 }

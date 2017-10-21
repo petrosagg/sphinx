@@ -1,12 +1,11 @@
 import React from 'react'
 import { graphql, createFragmentContainer } from 'react-relay'
 import {
-	AppBar,
-	CircularProgress,
+	Divider,
 	Grid,
 	List,
 	ListItem,
-	Toolbar,
+	Paper,
 	Typography,
 } from 'material-ui'
 
@@ -17,12 +16,13 @@ class CountryList extends React.Component {
 			return <div>Could not load data</div>
 		}
 		return (
-			<div>
-				<Grid container>
-					<Grid xs="4" item>
+			<Grid justify="center" spacing={0} container>
+				<Grid xs={6} item>
+					<Paper>
 						 <Typography type="headline">
 							Countries
 						</Typography>
+						<Divider />
 						<List>{
 							countries.map((country, i) => (
 								<ListItem button key={i} onClick={() => this.props.countryClickHandler(country.id)}>
@@ -30,9 +30,9 @@ class CountryList extends React.Component {
 								</ListItem>
 							))
 						}</List>
-					</Grid>
+					</Paper>
 				</Grid>
-			</div>
+			</Grid>
 		)
 	}
 }

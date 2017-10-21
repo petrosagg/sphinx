@@ -1,7 +1,9 @@
 import React from 'react'
 import { graphql, createFragmentContainer } from 'react-relay'
 import {
+	Divider,
 	Grid,
+	Paper,
 	Typography,
 } from 'material-ui'
 
@@ -11,16 +13,17 @@ class League extends React.Component {
 	render() {
 		const league = this.props.league;
 		return (
-			<div>
-				<Grid container>
-					<Grid item>
+			<Grid justify="center" spacing={0} container>
+				<Grid xs={6} item>
+					<Paper>
 						 <Typography type="headline">
 							{league.name}
 						</Typography>
+						<Divider />
 						<SeasonList data={league} />
-					</Grid>
+					</Paper>
 				</Grid>
-			</div>
+			</Grid>
 		)
 	}
 }
