@@ -14,18 +14,24 @@ const HEADERS = {
 	'DNT': '1',
 	'Pragma': 'no-cache',
 	'Referer': 'http://www.futbol24.com/',
-	'X-Requested-With': 'XMLHttpRequest',
 };
 
-const fetch = (uri) => {
+const fetch = (uri, opts) => {
 	console.log('GET', uri)
-	const opts = {
+
+	let headers = HEADERS
+	if (opts && opts.xhr) {
+		headers = Object.create(HEADERS)
+		headers['X-Requested-With'] = 'XMLHttpRequest'
+	}
+
+	const reqOpts = {
 		baseUrl: DOMAIN_ROOT,
 		uri: uri,
-		headers: HEADERS,
+		headers: headers,
 		gzip: true,
 	};
-	return request(opts).get('body').then(cheerio.load)
+	return request(reqOpts).get('body').then(cheerio.load)
 };
 
 module.exports = memoize(fetch, { maxAge: 10 * 60 * 1000, promise: true });

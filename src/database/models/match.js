@@ -6,7 +6,7 @@ exports.get = (id) => {
 		const [ scoreHome, scoreAway ] = utils.parseScore($('table thead td.result').text())
 
 		return {
-			id: url,
+			id: id,
 			home: {
 				id: $('table thead td.home a').attr('href'),
 				name: $('table thead td.home').text(),
@@ -17,7 +17,10 @@ exports.get = (id) => {
 			},
 			homeScore: scoreHome,
 			awayScore: scoreAway,
-			timestamp: timestamp,
+			season: {
+				id: $('span.country a:nth-child(2)').attr('href'),
+			},
+			timestamp: $('.date.timezone').attr('data-timestamp'),
 			_typeName: 'Match',
 		}
 	})

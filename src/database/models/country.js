@@ -1,12 +1,13 @@
 const fetch = require('../fetch')
 
 exports.getLeagues = (country) => {
-	return fetch('ml/subLeagues/?CountryId=' + country.id).then(($) => {
+	return fetch('ml/subLeagues/?CountryId=' + country.id, { xhr: true }).then(($) => {
 		return $('li.league').toArray().map($)
 		.map(($el) => {
 			return {
 				id: $('a', $el).attr('href'),
 				name: $el.text().trim(),
+				country: country,
 			}
 		})
 	})

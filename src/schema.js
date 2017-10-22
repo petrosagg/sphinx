@@ -28,7 +28,7 @@ const lazyField = (type) => ({
 		const prop = info.fieldName
 		const type = info.parentType.name
 
-		return typeof obj[prop] !== undefined ? obj[prop] : database.getNode[type](obj.id).get(prop)
+		return typeof obj[prop] !== 'undefined' ? obj[prop] : database.getNode[type](obj.id).get(prop)
 	}
 })
 
@@ -48,31 +48,33 @@ const Team = new GraphQLObjectType({
 
 const UpcomingMatch = new GraphQLObjectType({
 	name: 'UpcomingMatch',
-	fields: {
+	fields: () => ({
 		home: { type: Team },
 		away: { type: Team },
+		season: lazyField(Season),
 		timestamp: lazyField(GraphQLInt),
-	},
+	}),
 })
 
 const Match = new GraphQLObjectType({
 	name: 'Match',
 	interfaces: [ nodeInterface ],
-	fields: {
+	fields: () => ({
 		id: globalIdField(),
 		home: { type: Team },
 		away: { type: Team },
+		season: lazyField(Season),
 		homeScore: lazyField(GraphQLInt),
 		awayScore: lazyField(GraphQLInt),
 		postponed: lazyField(GraphQLBoolean),
 		timestamp: lazyField(GraphQLInt),
-	},
+	}),
 })
 
 const Season = new GraphQLObjectType({
 	name: 'Season',
 	interfaces: [ nodeInterface ],
-	fields: {
+	fields: () => ({
 		id: globalIdField(),
 		name: lazyField(GraphQLString),
 		upcomingMatches: {
@@ -82,21 +84,23 @@ const Season = new GraphQLObjectType({
 		matches: {
 			type: new GraphQLList(Match),
 			resolve: database.season.getMatches
-		}
-	},
+		},
+		league: lazyField(League),
+	}),
 })
 
 const League = new GraphQLObjectType({
 	name: 'League',
 	interfaces: [ nodeInterface ],
-	fields: {
+	fields: () => ({
 		id: globalIdField(),
 		name: lazyField(GraphQLString),
 		seasons: {
 			type: new GraphQLList(Season),
 			resolve: database.league.getSeasons
-		}
-	},
+		},
+		country: lazyField(Country),
+	}),
 })
 
 const Country = new GraphQLObjectType({
@@ -141,7 +145,7 @@ const QueryType = new GraphQLObjectType({
 			resolve: (obj, args) => resolveNode(args.id)
 		},
 		match: {
-			type: Season,
+			type: Match,
 			args: {
 				id: { type: GraphQLString }
 			},
