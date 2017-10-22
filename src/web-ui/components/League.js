@@ -1,5 +1,6 @@
 import React from 'react'
 import { graphql, createFragmentContainer } from 'react-relay'
+import { withStyles } from 'material-ui/styles'
 import {
 	Divider,
 	Grid,
@@ -9,13 +10,21 @@ import {
 
 import SeasonList from './SeasonList'
 
+const styles = theme => ({
+  root: theme.mixins.gutters({
+    paddingTop: 16,
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+  }),
+})
+
 class League extends React.Component {
 	render() {
 		const league = this.props.league;
 		return (
 			<Grid justify="center" spacing={0} container>
 				<Grid xs={6} item>
-					<Paper>
+					<Paper className={this.props.classes.root}>
 						 <Typography type="headline">
 							{league.name}
 						</Typography>
@@ -29,7 +38,7 @@ class League extends React.Component {
 }
 
 export default createFragmentContainer(
-	League,
+	withStyles(styles)(League),
 	graphql`
 		fragment League_league on League {
 			name

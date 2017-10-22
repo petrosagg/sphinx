@@ -1,5 +1,6 @@
 import React from 'react'
 import { graphql, createFragmentContainer } from 'react-relay'
+import { withStyles } from 'material-ui/styles'
 import {
 	Divider,
 	Grid,
@@ -8,6 +9,14 @@ import {
 	Paper,
 	Typography,
 } from 'material-ui'
+
+const styles = theme => ({
+  root: theme.mixins.gutters({
+    paddingTop: 16,
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+  }),
+})
 
 class CountryList extends React.Component {
 	render() {
@@ -18,7 +27,7 @@ class CountryList extends React.Component {
 		return (
 			<Grid justify="center" spacing={0} container>
 				<Grid xs={6} item>
-					<Paper>
+					<Paper className={this.props.classes.root}>
 						 <Typography type="headline">
 							Countries
 						</Typography>
@@ -38,7 +47,7 @@ class CountryList extends React.Component {
 }
 
 export default createFragmentContainer(
-	CountryList,
+	withStyles(styles)(CountryList),
 	graphql`
 		fragment CountryList on Query {
 			countries {
