@@ -26,7 +26,7 @@ class League extends React.Component {
 				<Grid xs={6} item>
 					<Paper className={this.props.classes.root}>
 						 <Typography type="headline">
-							{league.name}
+							{league.country.name} > {league.name}
 						</Typography>
 						<Divider />
 						<SeasonList data={league} seasonClickHandler={this.props.seasonClickHandler} />
@@ -42,6 +42,9 @@ export default createFragmentContainer(
 	graphql`
 		fragment League_league on League {
 			name
+			country {
+				name
+			}
 			...SeasonList
 		}
 	`,

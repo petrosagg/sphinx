@@ -29,7 +29,7 @@ class Season extends React.Component {
 				<Grid item>
 					<Paper className={this.props.classes.root}>
 						<Typography type="headline">
-							{season.name}
+							{season.league.country.name} > {season.league.name} > {season.name}
 						</Typography>
 						<Divider />
 						<Table>
@@ -68,6 +68,12 @@ export default createFragmentContainer(
 	graphql`
 		fragment Season_season on Season {
 			name
+			league {
+				name
+				country {
+					name
+				}
+			}
 			matches {
 				timestamp
 				home {
