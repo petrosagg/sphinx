@@ -34,4 +34,4 @@ const fetch = (uri, opts) => {
 	return request(reqOpts).get('body').then(cheerio.load)
 };
 
-module.exports = memoize(fetch, { maxAge: 10 * 60 * 1000, promise: true });
+module.exports = memoize(fetch, { maxAge: 10 * 60 * 1000, promise: true, primitive: true });
