@@ -8,7 +8,7 @@ import {
 
 class LeagueList extends React.Component {
 	render() {
-		const leagues = this.props.data.leagues;
+		const leagues = this.props.data.leagues.edges.map((e) => e.node)
 		return (
 			<List>{
 				leagues.map((league, i) => {
@@ -26,8 +26,12 @@ export default createFragmentContainer(
 	graphql`
 		fragment LeagueList on Country {
 			leagues {
-				id
-				name
+				edges {
+					node {
+						id
+						name
+					}
+				}
 			}
 		}
 	`,

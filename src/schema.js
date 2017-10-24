@@ -1,13 +1,15 @@
 const pathModule = require('path')
 const {
 	GraphQLBoolean,
-	GraphQLList,
 	GraphQLInt,
 	GraphQLObjectType,
 	GraphQLSchema,
 	GraphQLString,
 } = require('graphql')
 const {
+	connectionArgs,
+	connectionDefinitions,
+	connectionFromPromisedArray,
 	fromGlobalId,
 	globalIdField,
 	nodeDefinitions,
@@ -40,8 +42,11 @@ const Team = new GraphQLObjectType({
 		name: lazyField(GraphQLString),
 		fullName: lazyField(GraphQLString),
 		history: {
-			type: new GraphQLList(Match),
-			resolve: database.team.getHistory
+			type: MatchConnection,
+			args: connectionArgs,
+			resolve: (team, args) => {
+				return connectionFromPromisedArray(database.team.getMatches(team), args)
+			}
 		}
 	}),
 })
@@ -78,12 +83,18 @@ const Season = new GraphQLObjectType({
 		id: globalIdField(),
 		name: lazyField(GraphQLString),
 		upcomingMatches: {
-			type: new GraphQLList(UpcomingMatch),
-			resolve: database.season.getUpcomingMatches
+			type: UpcomingMatchConnection,
+			args: connectionArgs,
+			resolve: (season, args) => {
+				return connectionFromPromisedArray(database.season.getUpcomingMatches(season), args)
+			}
 		},
 		matches: {
-			type: new GraphQLList(Match),
-			resolve: database.season.getMatches
+			type: MatchConnection,
+			args: connectionArgs,
+			resolve: (season, args) => {
+				return connectionFromPromisedArray(database.season.getMatches(season), args)
+			}
 		},
 		league: lazyField(League),
 	}),
@@ -96,8 +107,11 @@ const League = new GraphQLObjectType({
 		id: globalIdField(),
 		name: lazyField(GraphQLString),
 		seasons: {
-			type: new GraphQLList(Season),
-			resolve: database.league.getSeasons
+			type: SeasonConnection,
+			args: connectionArgs,
+			resolve: (league, args) => {
+				return connectionFromPromisedArray(database.league.getSeasons(league), args)
+			}
 		},
 		country: lazyField(Country),
 	}),
@@ -106,22 +120,34 @@ const League = new GraphQLObjectType({
 const Country = new GraphQLObjectType({
 	name: 'Country',
 	interfaces: [ nodeInterface ],
-	fields: {
+	fields: () => ({
 		id: globalIdField(),
 		name: lazyField(GraphQLString),
 		leagues: {
-			type: new GraphQLList(League),
-			resolve: database.country.getLeagues
+			type: LeagueConnection,
+			args: connectionArgs,
+			resolve: (country, args) => {
+				return connectionFromPromisedArray(database.country.getLeagues(country), args)
+			}
 		}
-	},
+	}),
 })
+
+const CountryConnection = connectionDefinitions({ nodeType: Country }).connectionType
+const LeagueConnection = connectionDefinitions({ nodeType: League }).connectionType
+const SeasonConnection = connectionDefinitions({ nodeType: Season }).connectionType
+const MatchConnection = connectionDefinitions({ nodeType: Match }).connectionType
+const UpcomingMatchConnection = connectionDefinitions({ nodeType: UpcomingMatch }).connectionType
 
 const QueryType = new GraphQLObjectType({
 	name: 'Query',
 	fields: {
 		countries: {
-			type: new GraphQLList(Country),
-			resolve: database.country.getAll
+			type: CountryConnection,
+			args: connectionArgs,
+			resolve: (obj, args) => {
+				return connectionFromPromisedArray(database.country.getAll(), args)
+			}
 		},
 		country: {
 			type: Country,

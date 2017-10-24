@@ -44,7 +44,7 @@ class Season extends React.Component {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{season.matches.map((m, i) => (
+								{season.matches.edges.map(({ node: m }, i) => (
 									<TableRow hover key={i}>
 										<TableCell>{new Date(m.timestamp * 1000).toLocaleString()}</TableCell>
 										<TableCell>{m.home.name}</TableCell>
@@ -75,16 +75,20 @@ export default createFragmentContainer(
 				}
 			}
 			matches {
-				timestamp
-				home {
-					name
+				edges {
+					node {
+						timestamp
+						home {
+							name
+						}
+						away {
+							name
+						}
+						homeScore
+						awayScore
+						postponed
+					}
 				}
-				away {
-					name
-				}
-				homeScore
-				awayScore
-				postponed
 			}
 		}
 	`,

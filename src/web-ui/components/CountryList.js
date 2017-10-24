@@ -20,7 +20,7 @@ const styles = theme => ({
 
 class CountryList extends React.Component {
 	render() {
-		const countries = this.props.data.countries;
+		const countries = this.props.data.countries.edges.map((e) => e.node)
 		if (countries === null) {
 			return <div>Could not load data</div>
 		}
@@ -51,8 +51,12 @@ export default createFragmentContainer(
 	graphql`
 		fragment CountryList on Query {
 			countries {
-				id
-				name
+				edges {
+					node {
+						id
+						name
+					}
+				}
 			}
 		}
 	`,
