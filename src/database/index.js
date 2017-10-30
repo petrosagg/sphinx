@@ -5,9 +5,9 @@ exports.match = require('./models/match')
 exports.team = require('./models/team')
 
 exports.getNode = {
-	'Country': exports.country.get,
-	'League': exports.league.get,
-	'Season': exports.season.get,
-	'Match': exports.match.get,
-	'Team': exports.team.get,
+  'Country': exports.country.get,
+  'League': exports.league.get,
+  'Season': exports.season.get,
+  'Match': exports.match.get,
+  'Team': exports.team.get
 }

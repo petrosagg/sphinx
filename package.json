@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "relay": "node scripts/generate-schema.js && relay-compiler --src ./src/web-ui --schema .schema.graphql",
+	"lint": "standard",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -33,6 +34,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "relay-compiler": "^1.4.1",
+    "standard": "^10.0.3",
     "webpack": "^3.7.1",
     "webpack-dev-server": "^2.9.1"
   }
