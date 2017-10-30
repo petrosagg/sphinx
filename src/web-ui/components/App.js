@@ -102,7 +102,7 @@ export default class App extends React.Component {
       `
     } else {
       query = graphql`
-        query App_CountriesQuery {
+        query App_CountriesQuery($first: Int, $after: String, $last: Int, $before: String) {
           ...CountryList
         }
       `
@@ -113,6 +113,7 @@ export default class App extends React.Component {
         environment={relay}
         query={query}
         variables={{
+          first: 10,
           countryId: this.state.country,
           leagueId: this.state.league,
           seasonId: this.state.season
