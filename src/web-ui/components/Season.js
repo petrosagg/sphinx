@@ -40,6 +40,8 @@ class Season extends React.Component {
                   <TableCell>Away</TableCell>
                   <TableCell>Score Home</TableCell>
                   <TableCell>Score Away</TableCell>
+                  <TableCell>Score Home HT</TableCell>
+                  <TableCell>Score Away HT</TableCell>
                   <TableCell>Postponed</TableCell>
                 </TableRow>
               </TableHead>
@@ -51,6 +53,8 @@ class Season extends React.Component {
                     <TableCell>{m.away.name}</TableCell>
                     <TableCell>{m.homeScore}</TableCell>
                     <TableCell>{m.awayScore}</TableCell>
+                    <TableCell>{m.homeScoreHT}</TableCell>
+                    <TableCell>{m.awayScoreHT}</TableCell>
                     <TableCell>{m.postponed ? 'yes' : 'no'}</TableCell>
                   </TableRow>
                 ))}
@@ -86,6 +90,8 @@ export default createFragmentContainer(
             }
             homeScore
             awayScore
+            homeScoreHT
+            awayScoreHT
             postponed
           }
         }
