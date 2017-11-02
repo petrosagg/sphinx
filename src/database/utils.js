@@ -29,7 +29,7 @@ exports.parseMatch = ($, match) => {
 
     const url = $('.dash a.matchAction', match).attr('href')
     const [ postponed, scoreHome, scoreAway ] = parseScore($('.dash', match).text())
-    // [ scoreHomeHT, scoreAwayHT ] = yield getHTScore(url)
+    const friendly = $('.comp a', match).attr('title').indexOf('Friend') !== -1
 
     return {
       id: url,
@@ -42,6 +42,7 @@ exports.parseMatch = ($, match) => {
         name: awayTeam
       },
       postponed: postponed,
+      friendly: friendly,
       homeScore: scoreHome,
       awayScore: scoreAway,
       timestamp: timestamp

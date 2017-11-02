@@ -73,6 +73,7 @@ const Match = new GraphQLObjectType({
     homeScoreHT: lazyField(GraphQLInt),
     awayScoreHT: lazyField(GraphQLInt),
     postponed: lazyField(GraphQLBoolean),
+    friendly: lazyField(GraphQLBoolean),
     timestamp: lazyField(GraphQLInt)
   })
 })
