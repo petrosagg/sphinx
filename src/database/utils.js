@@ -29,7 +29,11 @@ exports.parseMatch = ($, match) => {
 
     const url = $('.dash a.matchAction', match).attr('href')
     const [ postponed, scoreHome, scoreAway ] = parseScore($('.dash', match).text())
-    const friendly = $('.comp a', match).attr('title').indexOf('Friend') !== -1
+
+    let friendly = false
+    if ($('.comp a', match).attr('title')) {
+      friendly = $('.comp a', match).attr('title').indexOf('Friend') !== -1
+    }
 
     return {
       id: url,
