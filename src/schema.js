@@ -44,7 +44,7 @@ const Team = new GraphQLObjectType({
       type: MatchConnection,
       args: connectionArgs,
       resolve: (team, args) => {
-        return connectionFromPromisedArray(database.team.getMatches(team), args)
+        return connectionFromPromisedArray(database.team.getHistory(team), args)
       }
     }
   })
