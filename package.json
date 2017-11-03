@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "relay": "node scripts/generate-schema.js && relay-compiler --src ./src/web-ui --schema .schema.graphql",
-	"lint": "standard",
+    "lint": "standard",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,11 +14,11 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "cheerio": "^1.0.0-rc.2",
-    "express": "^4.16.1",
+    "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.11.7",
     "graphql-relay": "^0.5.3",
-    "material-ui": "^1.0.0-beta.16",
+    "material-ui": "^1.0.0-beta.19",
     "memoizee": "^0.4.11",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
@@ -35,7 +35,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "relay-compiler": "^1.4.1",
     "standard": "^10.0.3",
-    "webpack": "^3.7.1",
-    "webpack-dev-server": "^2.9.1"
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
   }
 }
