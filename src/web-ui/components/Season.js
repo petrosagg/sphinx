@@ -18,7 +18,19 @@ const styles = theme => ({
     paddingTop: 16,
     marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3
-  })
+  }),
+  cellNormal: {
+    paddingLeft: 8,
+    paddingRight: 8
+  },
+  cell: {
+    paddingLeft: 3,
+    paddingRight: 3
+  },
+  cellSep: {
+    paddingLeft: 10,
+    paddingRight: 3
+  }
 })
 
 // results = [ 0, 2, 1, 1, 0 ]
@@ -73,7 +85,7 @@ class Season extends React.Component {
   render () {
     const season = this.props.season
     return (
-      <Grid justify='left' spacing={0} container>
+      <Grid justify='center' spacing={0} container>
         <Grid item>
           <Paper className={this.props.classes.root}>
             <Typography type='headline'>
@@ -83,24 +95,14 @@ class Season extends React.Component {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Timestamp</TableCell>
-                  <TableCell>Home</TableCell>
-                  <TableCell>Away</TableCell>
-                  <TableCell>Score</TableCell>
-                  <TableCell>Score HT</TableCell>
-                  <TableCell>Home F1</TableCell>
-                  <TableCell>Home F2</TableCell>
-                  <TableCell>Home F3</TableCell>
-                  <TableCell>Home F5</TableCell>
-                  <TableCell>Home F6</TableCell>
-                  <TableCell>Home F7</TableCell>
-                  <TableCell>Away F1</TableCell>
-                  <TableCell>Away F2</TableCell>
-                  <TableCell>Away F3</TableCell>
-                  <TableCell>Away F5</TableCell>
-                  <TableCell>Away F6</TableCell>
-                  <TableCell>Away F7</TableCell>
-                  <TableCell>Postponed</TableCell>
+                  <TableCell className={this.props.classes.cellNormal}>Timestamp</TableCell>
+                  <TableCell className={this.props.classes.cellNormal}>Home</TableCell>
+                  <TableCell className={this.props.classes.cellNormal}>Away</TableCell>
+                  <TableCell className={this.props.classes.cellNormal}>Score</TableCell>
+                  <TableCell className={this.props.classes.cellNormal}>Score HT</TableCell>
+                  <TableCell className={this.props.classes.cell} colSpan={6}>Home Form</TableCell>
+                  <TableCell className={this.props.classes.cellSep} colSpan={6}>Away Form</TableCell>
+                  <TableCell className={this.props.classes.cellSep}>Postponed</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -109,24 +111,24 @@ class Season extends React.Component {
                   const awayForm = getTeamForm(m.away, m.away.history.edges.filter(({ node: h }) => h.timestamp < m.timestamp))
 
                   return <TableRow hover key={i}>
-                    <TableCell>{new Date(m.timestamp * 1000).toLocaleString()}</TableCell>
-                    <TableCell>{m.home.name}</TableCell>
-                    <TableCell>{m.away.name}</TableCell>
-                    <TableCell>{`${m.homeScore}-${m.awayScore}`}</TableCell>
-                    <TableCell>{`${m.homeScoreHT}-${m.awayScoreHT}`}</TableCell>
-                    <TableCell>{homeForm.form2}</TableCell>
-                    <TableCell>{homeForm.form3}</TableCell>
-                    <TableCell>{homeForm.form4}</TableCell>
-                    <TableCell>{homeForm.form5}</TableCell>
-                    <TableCell>{homeForm.form6}</TableCell>
-                    <TableCell>{homeForm.form7}</TableCell>
-                    <TableCell>{awayForm.form2}</TableCell>
-                    <TableCell>{awayForm.form3}</TableCell>
-                    <TableCell>{awayForm.form4}</TableCell>
-                    <TableCell>{awayForm.form5}</TableCell>
-                    <TableCell>{awayForm.form6}</TableCell>
-                    <TableCell>{awayForm.form7}</TableCell>
-                    <TableCell>{m.postponed ? 'yes' : 'no'}</TableCell>
+                    <TableCell className={this.props.classes.cellNormal}>{new Date(m.timestamp * 1000).toLocaleString()}</TableCell>
+                    <TableCell className={this.props.classes.cellNormal}>{m.home.name}</TableCell>
+                    <TableCell className={this.props.classes.cellNormal}>{m.away.name}</TableCell>
+                    <TableCell className={this.props.classes.cellNormal}>{`${m.homeScore}-${m.awayScore}`}</TableCell>
+                    <TableCell className={this.props.classes.cellNormal}>{`${m.homeScoreHT}-${m.awayScoreHT}`}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm.form2}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm.form3}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm.form4}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm.form5}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm.form6}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm.form7}</TableCell>
+                    <TableCell className={this.props.classes.cellSep}>{awayForm.form2}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm.form3}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm.form4}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm.form5}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm.form6}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm.form7}</TableCell>
+                    <TableCell className={this.props.classes.cellSep}>{m.postponed ? 'yes' : 'no'}</TableCell>
                   </TableRow>
                 })}
               </TableBody>
