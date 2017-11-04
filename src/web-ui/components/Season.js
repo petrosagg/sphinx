@@ -115,19 +115,19 @@ class Season extends React.Component {
                     <TableCell className={this.props.classes.cellNormal}>{m.home.name}</TableCell>
                     <TableCell className={this.props.classes.cellNormal}>{m.away.name}</TableCell>
                     <TableCell className={this.props.classes.cellNormal}>{`${m.homeScore}-${m.awayScore}`}</TableCell>
-                    <TableCell className={this.props.classes.cellNormal}>{`${m.homeScoreHT}-${m.awayScoreHT}`}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{homeForm.form2}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{homeForm.form3}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{homeForm.form4}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{homeForm.form5}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{homeForm.form6}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{homeForm.form7}</TableCell>
-                    <TableCell className={this.props.classes.cellSep}>{awayForm.form2}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{awayForm.form3}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{awayForm.form4}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{awayForm.form5}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{awayForm.form6}</TableCell>
-                    <TableCell className={this.props.classes.cell}>{awayForm.form7}</TableCell>
+                    <TableCell className={this.props.classes.cellNormal}>{m.homeScoreHT !== null ? `${m.homeScoreHT}-${m.awayScoreHT}` : 'N/A'}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form2 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form3 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form4 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form5 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form6 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form7 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cellSep}>{awayForm ? awayForm.form2 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form3 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form4 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form5 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form6 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form7 : ''}</TableCell>
                     <TableCell className={this.props.classes.cellSep}>{m.postponed ? 'yes' : 'no'}</TableCell>
                   </TableRow>
                 })}
