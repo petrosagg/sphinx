@@ -15,6 +15,7 @@ module.exports = {
   },
   devServer: {
     contentBase: './src/web-ui/static',
+    historyApiFallback: true,
     proxy: {
       '/graphql': 'http://localhost:4000'
     }
