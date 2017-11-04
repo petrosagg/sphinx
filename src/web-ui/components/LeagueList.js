@@ -5,13 +5,15 @@ import {
   ListItem
 } from 'material-ui'
 
+import history from '../history'
+
 class LeagueList extends React.Component {
   render () {
     const leagues = this.props.data.leagues.edges.map((e) => e.node)
     return (
       <List>{
         leagues.map((league, i) => {
-          return <ListItem button key={i} onClick={() => this.props.leagueClickHandler(league.id)}>
+          return <ListItem button key={i} onClick={() => history.push('/league/' + league.id)}>
             {league.name}
           </ListItem>
         })

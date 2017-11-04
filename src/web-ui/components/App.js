@@ -7,7 +7,9 @@ import {
   Typography
 } from 'material-ui'
 
+import router from '../router'
 import relay from '../relay'
+import history from '../history'
 import CountryList from './CountryList'
 import Country from './Country'
 import League from './League'
@@ -16,52 +18,44 @@ import Season from './Season'
 export default class App extends React.Component {
   constructor () {
     super()
-    this.state = {
-      country: null,
-      league: null,
-      season: null
-    }
+    this.state = {}
+  }
+
+  unlisten: () => void
+
+  componentDidMount() {
+    this.unlisten = history.listen(this.resolveRoute.bind(this))
+    this.resolveRoute(history.location)
+  }
+
+  componentWillUnmount() {
+    this.unlisten()
+  }
+
+  resolveRoute(location) {
+    return router.resolve(location).then(route => this.setState(route))
   }
 
   handleCountryClick (countryId) {
-    this.setState({country: countryId, league: null, season: null})
+    history.push('/country/' + countryId)
   }
 
-  handleLeagueClick (leagueId) {
-    this.setState({country: null, league: leagueId, season: null})
-  }
-
-  handleSeasonClick (seasonId) {
-    this.setState({country: null, league: null, season: seasonId})
-  }
-
-  renderState ({ props, retry }) {
+  renderState ({ error, props, retry }) {
     const title = (
       <AppBar position='static'>
         <Toolbar>
-          <Typography type='title' color='inherit' onClick={() => this.setState({country: null, league: null, season: null})}>
+          <Typography type='title' color='inherit' onClick={() => history.push('/')}>
             Sphinx
           </Typography>
         </Toolbar>
       </AppBar>
     )
 
-    if (props) {
-      let page = null
-      if (this.state.country) {
-        page = <Country country={props.country} leagueClickHandler={(id) => this.handleLeagueClick(id)} />
-      } else if (this.state.league) {
-        page = <League league={props.league} seasonClickHandler={(id) => this.handleSeasonClick(id)} />
-      } else if (this.state.season) {
-        page = <Season season={props.season} />
-      } else {
-        page = <CountryList data={props} countryClickHandler={(id) => this.handleCountryClick(id)} />
-      }
-
+    if (this.state.component && props) {
       return (
         <div>
           {title}
-          {page}
+          <this.state.component data={props} />
         </div>
       )
     } else {
@@ -75,48 +69,12 @@ export default class App extends React.Component {
   }
 
   render () {
-    let query = null
-    if (this.state.country) {
-      query = graphql`
-        query App_CountryQuery($countryId: String) {
-          country(id: $countryId) {
-            ...Country_country
-          }
-        }
-      `
-    } else if (this.state.league) {
-      query = graphql`
-        query App_LeagueQuery($leagueId: String) {
-          league(id: $leagueId) {
-            ...League_league
-          }
-        }
-      `
-    } else if (this.state.season) {
-      query = graphql`
-        query App_SeasonQuery($seasonId: String) {
-          season(id: $seasonId) {
-            ...Season_season
-          }
-        }
-      `
-    } else {
-      query = graphql`
-        query App_CountriesQuery($first: Int, $after: String, $last: Int, $before: String) {
-          ...CountryList
-        }
-      `
-    }
-
     return (
       <QueryRenderer
         environment={relay}
-        query={query}
+        query={this.state.query}
         variables={{
-          first: 10,
-          countryId: this.state.country,
-          leagueId: this.state.league,
-          seasonId: this.state.season
+          ...this.state.params
         }}
         render={this.renderState.bind(this)}
       />

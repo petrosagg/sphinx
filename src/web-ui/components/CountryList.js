@@ -11,6 +11,8 @@ import {
   Typography
 } from 'material-ui'
 
+import history from '../history'
+
 const styles = theme => ({
   root: theme.mixins.gutters({
     paddingTop: 16,
@@ -40,7 +42,7 @@ class CountryList extends React.Component {
             <Divider />
             <List>{
               countries.map((country, i) => (
-                <ListItem button key={i} onClick={() => this.props.countryClickHandler(country.id)}>
+                <ListItem button key={i} onClick={() => history.push('/country/' + country.id)}>
                   {country.name}
                 </ListItem>
               ))
@@ -86,7 +88,7 @@ export default createRefetchContainer(
   withStyles(styles)(CountryList),
   graphql`
     fragment CountryList on Query {
-      countries(first: $first, after: $after, last: $last, before: $before) {
+      countries(first: 10, after: $after, last: $last, before: $before) {
         edges {
           node {
             id
@@ -101,7 +103,7 @@ export default createRefetchContainer(
     }
   `,
   graphql`
-    query CountryListRefetchQuery($first: Int, $after: String, $last: Int, $before: String) {
+    query CountryListRefetchQuery($after: String, $last: Int, $before: String) {
       ...CountryList
     }
   `

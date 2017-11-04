@@ -5,13 +5,15 @@ import {
   ListItem
 } from 'material-ui'
 
+import history from '../history'
+
 class SeasonList extends React.Component {
   render () {
     const seasons = this.props.data.seasons.edges.map((e) => e.node)
     return (
       <List>{
         seasons.map((season, i) => (
-          <ListItem button key={i} onClick={() => this.props.seasonClickHandler(season.id)}>
+          <ListItem button key={i} onClick={() => history.push('/season/' + season.id)}>
             {season.name}
           </ListItem>
         ))
