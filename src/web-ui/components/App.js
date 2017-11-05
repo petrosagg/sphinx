@@ -2,7 +2,7 @@ import React from 'react'
 import { QueryRenderer } from 'react-relay'
 import {
   AppBar,
-  CircularProgress,
+  LinearProgress,
   Toolbar,
   Typography
 } from 'material-ui'
@@ -44,7 +44,7 @@ export default class App extends React.Component {
           </Typography>
         </Toolbar>
       </AppBar>
-      {props ? this.state.render(props) : <CircularProgress />}
+      {props ? this.state.render(props) : <LinearProgress mode='query' color='accent' />}
     </div>
   }
 
