@@ -20,18 +20,18 @@ export default class App extends React.Component {
     }
   }
 
-  unlisten: () => void
+  unlisten () {}
 
-  componentDidMount() {
-    this.unlisten = history.listen(this.resolveRoute.bind(this))
+  componentDidMount () {
+    this.unlisten = history.listen(l => this.resolveRoute(l))
     this.resolveRoute(history.location)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.unlisten()
   }
 
-  resolveRoute(location) {
+  resolveRoute (location) {
     return router.resolve(location).then(route => this.setState(route))
   }
 
