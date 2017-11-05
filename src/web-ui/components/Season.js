@@ -24,11 +24,6 @@ const styles = theme => ({
   csvButton: {
     float: 'right'
   },
-  csv: {
-    color: 'white',
-    textDecoration: 'none',
-    fontWeight: 'bold'
-  },
   cellNormal: {
     paddingLeft: 8,
     paddingRight: 8
@@ -102,6 +97,76 @@ class Season extends React.Component {
       return ret
     })
 
+    const futureCSVData = [
+      [
+        'time', 'home', 'away', 'form_home_2', 'form_away_2', 'form_home_3',
+        'form_away_3', 'form_home_4', 'form_away_4', 'form_home_5',
+        'form_away_5', 'form_home_6', 'form_away_6', 'form_home_7',
+        'form_away_7'
+      ]
+    ]
+
+    for (const match of upcomingMatches) {
+      const homeForm = getTeamForm(match.home, match.home.history.edges.filter(({ node: h }) => h.timestamp < match.timestamp))
+      const awayForm = getTeamForm(match.away, match.away.history.edges.filter(({ node: h }) => h.timestamp < match.timestamp))
+
+      if (homeForm && awayForm) {
+        futureCSVData.push([
+          (new Date(match.timestamp * 1000)).toISOString(),
+          match.home.name,
+          match.away.name,
+          homeForm.form2,
+          awayForm.form2,
+          homeForm.form3,
+          awayForm.form3,
+          homeForm.form4,
+          awayForm.form4,
+          homeForm.form5,
+          awayForm.form5,
+          homeForm.form6,
+          awayForm.form6,
+          homeForm.form7,
+          awayForm.form7
+        ])
+      }
+    }
+
+    const pastCSVData = [
+      [
+        'time', 'home', 'away', 'score', 'scoreHT', 'form_home_2',
+        'form_away_2', 'form_home_3', 'form_away_3', 'form_home_4',
+        'form_away_4', 'form_home_5', 'form_away_5', 'form_home_6',
+        'form_away_6', 'form_home_7', 'form_away_7'
+      ]
+    ]
+
+    for (const { node: match } of season.matches.edges) {
+      const homeForm = getTeamForm(match.home, match.home.history.edges.filter(({ node: h }) => h.timestamp < match.timestamp))
+      const awayForm = getTeamForm(match.away, match.away.history.edges.filter(({ node: h }) => h.timestamp < match.timestamp))
+
+      if (homeForm && awayForm) {
+        pastCSVData.push([
+          (new Date(match.timestamp * 1000)).toISOString(),
+          match.home.name,
+          match.away.name,
+          `${match.homeScore}-${match.awayScore}`,
+          match.homeScoreHT ? `${match.homeScoreHT}-${match.awayScoreHT}` : '',
+          homeForm.form2,
+          awayForm.form2,
+          homeForm.form3,
+          awayForm.form3,
+          homeForm.form4,
+          awayForm.form4,
+          homeForm.form5,
+          awayForm.form5,
+          homeForm.form6,
+          awayForm.form6,
+          homeForm.form7,
+          awayForm.form7
+        ])
+      }
+    }
+
     return (
       <Grid justify='center' spacing={0} container>
         <Grid item>
@@ -113,9 +178,19 @@ class Season extends React.Component {
           <Paper className={this.props.classes.root}>
             <Typography type='subheading'>
               Future Matches
-              <Button className={this.props.classes.csvButton} raised color='primary'>
-                <CSVLink className={this.props.classes.csv} data={[]} >Download</CSVLink>
-              </Button>
+              <CSVLink
+                data={futureCSVData}
+                filename={[
+                  season.league.country.name,
+                  season.league.name,
+                  'future',
+                  (new Date()).toISOString().slice(0, 10)
+                ].join('-') + '.csv'
+              }>
+                <Button className={this.props.classes.csvButton} raised color='primary'>
+                  Download
+                </Button>
+              </CSVLink>
             </Typography>
             <Table>
               <TableHead>
@@ -156,9 +231,19 @@ class Season extends React.Component {
           <Paper className={this.props.classes.root}>
             <Typography type='subheading'>
               Past Matches
-              <Button className={this.props.classes.csvButton} raised color='primary'>
-                <CSVLink className={this.props.classes.csv} data={[]} >Download</CSVLink>
-              </Button>
+              <CSVLink
+                data={pastCSVData}
+                filename={[
+                  season.league.country.name,
+                  season.league.name,
+                  'past',
+                  (new Date()).toISOString().slice(0, 10)
+                ].join('-') + '.csv'
+              }>
+                <Button className={this.props.classes.csvButton} raised color='primary'>
+                  Download
+                </Button>
+              </CSVLink>
             </Typography>
             <Table>
               <TableHead>
