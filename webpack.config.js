@@ -16,10 +16,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: 'src/web-ui/static/index.html',
-      hash: true
-    }),
+    new HtmlWebpackPlugin({ hash: true, title: 'Sphinx' }),
     new UglifyJSPlugin()
   ],
   output: {

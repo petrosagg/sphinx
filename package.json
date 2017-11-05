@@ -36,7 +36,8 @@
     "react-relay": "^1.4.1",
     "relay-runtime": "^1.4.1",
     "request": "^2.83.0",
-    "universal-router": "^5.0.0"
+    "universal-router": "^5.0.0",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
