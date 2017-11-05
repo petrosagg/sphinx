@@ -9,7 +9,7 @@ import history from '../history'
 
 class SeasonList extends React.Component {
   render () {
-    const seasons = this.props.data.seasons.edges.map((e) => e.node)
+    const seasons = this.props.seasons
     return (
       <List>{
         seasons.map((season, i) => (
@@ -25,15 +25,9 @@ class SeasonList extends React.Component {
 export default createFragmentContainer(
   SeasonList,
   graphql`
-    fragment SeasonList on League {
-      seasons {
-        edges {
-          node {
-            id
-            name
-          }
-        }
-      }
+    fragment SeasonList_seasons on Season @relay(plural: true) {
+      id
+      name
     }
   `
 )

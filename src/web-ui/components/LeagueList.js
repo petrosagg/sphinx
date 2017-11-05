@@ -9,7 +9,7 @@ import history from '../history'
 
 class LeagueList extends React.Component {
   render () {
-    const leagues = this.props.data.leagues.edges.map((e) => e.node)
+    const leagues = this.props.leagues
     return (
       <List>{
         leagues.map((league, i) => {
@@ -25,15 +25,9 @@ class LeagueList extends React.Component {
 export default createFragmentContainer(
   LeagueList,
   graphql`
-    fragment LeagueList on Country {
-      leagues {
-        edges {
-          node {
-            id
-            name
-          }
-        }
-      }
+    fragment LeagueList_leagues on League @relay(plural: true) {
+      id
+      name
     }
   `
 )

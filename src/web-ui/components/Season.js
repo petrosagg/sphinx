@@ -83,7 +83,7 @@ const getTeamForm = (team, matches) => {
 
 class Season extends React.Component {
   render () {
-    const season = this.props.data.season
+    const season = this.props.season
     return (
       <Grid justify='center' spacing={0} container>
         <Grid item>
@@ -143,61 +143,62 @@ class Season extends React.Component {
 export default createFragmentContainer(
   withStyles(styles)(Season),
   graphql`
-    fragment Season on Query {
-      season(id: $id) {
+    fragment Season_season on Season {
+      name
+      league {
         name
-        league {
+        country {
           name
-          country {
-            name
+        }
+      }
           }
         }
-        matches {
-          edges {
-            node {
-              timestamp
-              home {
-                id
-                name
-                history {
-                  edges {
-                    node {
-                      home {
-                        id
-                      }
-                      homeScore
-                      awayScore
-                      friendly
-                      postponed
-                      timestamp
+      }
+      matches {
+        edges {
+          node {
+            timestamp
+            home {
+              id
+              name
+              history {
+                edges {
+                  node {
+                    home {
+                      id
                     }
+                    homeScore
+                    awayScore
+                    friendly
+                    postponed
+                    timestamp
                   }
                 }
               }
-              away {
-                id
-                name
-                history {
-                  edges {
-                    node {
-                      home {
-                        id
-                      }
-                      homeScore
-                      awayScore
-                      friendly
-                      postponed
-                      timestamp
-                    }
-                  }
-                }
-              }
-              homeScore
-              awayScore
-              homeScoreHT
-              awayScoreHT
-              postponed
             }
+            away {
+              id
+              name
+              history {
+                edges {
+                  node {
+                    home {
+                      id
+                    }
+                    homeScore
+                    awayScore
+                    friendly
+                    postponed
+                    timestamp
+                  }
+                }
+              }
+            }
+            homeScore
+            awayScore
+            homeScoreHT
+            awayScoreHT
+            postponed
           }
         }
       }

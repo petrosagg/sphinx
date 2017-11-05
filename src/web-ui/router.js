@@ -21,28 +21,34 @@ const routes = [
     path: '/country/:id',
     query: graphql`
       query router_CountryQuery($id: String) {
-        ...Country
+        country(id: $id) {
+          ...Country_country
+        }
       }
     `,
-    render: props => <Country data={props} />
+    render: props => <Country country={props.country} />
   },
   {
     path: '/league/:id',
     query: graphql`
       query router_LeagueQuery($id: String) {
-        ...League
+        league(id: $id) {
+          ...League_league
+        }
       }
     `,
-    render: props => <League data={props} />
+    render: props => <League league={props.league} />
   },
   {
     path: '/season/:id',
     query: graphql`
       query router_SeasonQuery($id: String) {
-        ...Season
+        season(id: $id) {
+          ...Season_season
+        }
       }
     `,
-    render: props => <Season data={props} />
+    render: props => <Season season={props.season} />
   }
 ]
 

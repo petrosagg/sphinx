@@ -20,7 +20,7 @@ const styles = theme => ({
 
 class Country extends React.Component {
   render () {
-    const country = this.props.data.country
+    const country = this.props.country
     return (
       <Grid justify='center' spacing={0} container>
         <Grid xs={6} item>
@@ -29,7 +29,7 @@ class Country extends React.Component {
               {country.name}
             </Typography>
             <Divider />
-            <LeagueList data={country} />
+            <LeagueList leagues={country.leagues.edges.map(e => e.node)} />
           </Paper>
         </Grid>
       </Grid>
@@ -40,10 +40,14 @@ class Country extends React.Component {
 export default createFragmentContainer(
   withStyles(styles)(Country),
   graphql`
-    fragment Country on Query {
-      country(id: $id) {
-        name
-        ...LeagueList
+    fragment Country_country on Country {
+      name
+      leagues {
+        edges {
+          node {
+            ...LeagueList_leagues
+          }
+        }
       }
     }
   `
