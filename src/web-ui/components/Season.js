@@ -107,7 +107,7 @@ class Season extends React.Component {
         <Grid item>
           <Paper className={this.props.classes.root}>
             <Typography type='title'>
-              {season.league.country.name} > {season.league.name} > {season.name}
+              {season.league.country.name} » {season.league.name} » {season.name}
             </Typography>
           </Paper>
           <Paper className={this.props.classes.root}>
