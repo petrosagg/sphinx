@@ -84,6 +84,14 @@ const getTeamForm = (team, matches) => {
 class Season extends React.Component {
   render () {
     const season = this.props.season
+    const seenTeams = new Set()
+    const upcomingMatches = season.upcomingMatches.edges.map(e => e.node).filter(m => {
+      const ret = !seenTeams.has(m.home.name) && !seenTeams.has(m.away.name)
+      seenTeams.add(m.home.name)
+      seenTeams.add(m.away.name)
+      return ret
+    })
+
     return (
       <Grid justify='center' spacing={0} container>
         <Grid item>
@@ -91,7 +99,47 @@ class Season extends React.Component {
             <Typography type='headline'>
               {season.league.country.name} > {season.league.name} > {season.name}
             </Typography>
-            <Divider />
+          </Paper>
+          <Paper className={this.props.classes.root}>
+            <Typography type='subheading'>Future Matches</Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className={this.props.classes.cellNormal}>Timestamp</TableCell>
+                  <TableCell className={this.props.classes.cellNormal}>Home</TableCell>
+                  <TableCell className={this.props.classes.cellNormal}>Away</TableCell>
+                  <TableCell className={this.props.classes.cell} colSpan={6}>Home Form</TableCell>
+                  <TableCell className={this.props.classes.cellSep} colSpan={6}>Away Form</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {upcomingMatches.map((m, i) => {
+                  const homeForm = getTeamForm(m.home, m.home.history.edges.filter(({ node: h }) => h.timestamp < m.timestamp))
+                  const awayForm = getTeamForm(m.away, m.away.history.edges.filter(({ node: h }) => h.timestamp < m.timestamp))
+
+                  return <TableRow hover key={i}>
+                    <TableCell className={this.props.classes.cellNormal}>{new Date(m.timestamp * 1000).toLocaleString()}</TableCell>
+                    <TableCell className={this.props.classes.cellNormal}>{m.home.name}</TableCell>
+                    <TableCell className={this.props.classes.cellNormal}>{m.away.name}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form2 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form3 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form4 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form5 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form6 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{homeForm ? homeForm.form7 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cellSep}>{awayForm ? awayForm.form2 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form3 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form4 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form5 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form6 : ''}</TableCell>
+                    <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form7 : ''}</TableCell>
+                  </TableRow>
+                })}
+              </TableBody>
+            </Table>
+          </Paper>
+          <Paper className={this.props.classes.root}>
+            <Typography type='subheading'>Past Matches</Typography>
             <Table>
               <TableHead>
                 <TableRow>
@@ -151,6 +199,46 @@ export default createFragmentContainer(
           name
         }
       }
+      upcomingMatches {
+        edges {
+          node {
+            timestamp
+            home {
+              id
+              name
+              history {
+                edges {
+                  node {
+                    home {
+                      id
+                    }
+                    homeScore
+                    awayScore
+                    friendly
+                    postponed
+                    timestamp
+                  }
+                }
+              }
+            }
+            away {
+              id
+              name
+              history {
+                edges {
+                  node {
+                    home {
+                      id
+                    }
+                    homeScore
+                    awayScore
+                    friendly
+                    postponed
+                    timestamp
+                  }
+                }
+              }
+            }
           }
         }
       }
