@@ -89,6 +89,7 @@ const getTeamForm = (team, matches) => {
 class Season extends React.Component {
   render () {
     const season = this.props.season
+
     const seenTeams = new Set()
     const upcomingMatches = season.upcomingMatches.edges.map(e => e.node).filter(m => {
       const ret = !seenTeams.has(m.home.name) && !seenTeams.has(m.away.name)
@@ -96,6 +97,8 @@ class Season extends React.Component {
       seenTeams.add(m.away.name)
       return ret
     })
+
+    const pastMatches = season.matches.edges.map(e => e.node).filter(m => !m.postponed)
 
     const futureCSVData = [
       [
@@ -140,7 +143,7 @@ class Season extends React.Component {
       ]
     ]
 
-    for (const { node: match } of season.matches.edges) {
+    for (const match of pastMatches) {
       const homeForm = getTeamForm(match.home, match.home.history.edges.filter(({ node: h }) => h.timestamp < match.timestamp))
       const awayForm = getTeamForm(match.away, match.away.history.edges.filter(({ node: h }) => h.timestamp < match.timestamp))
 
@@ -255,11 +258,10 @@ class Season extends React.Component {
                   <TableCell className={this.props.classes.cellNormal}>Score HT</TableCell>
                   <TableCell className={this.props.classes.cell} colSpan={6}>Home Form</TableCell>
                   <TableCell className={this.props.classes.cellSep} colSpan={6}>Away Form</TableCell>
-                  <TableCell className={this.props.classes.cellSep}>Postponed</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {season.matches.edges.map(({ node: m }, i) => {
+                {pastMatches.map((m, i) => {
                   const homeForm = getTeamForm(m.home, m.home.history.edges.filter(({ node: h }) => h.timestamp < m.timestamp))
                   const awayForm = getTeamForm(m.away, m.away.history.edges.filter(({ node: h }) => h.timestamp < m.timestamp))
 
@@ -281,7 +283,6 @@ class Season extends React.Component {
                     <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form5 : ''}</TableCell>
                     <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form6 : ''}</TableCell>
                     <TableCell className={this.props.classes.cell}>{awayForm ? awayForm.form7 : ''}</TableCell>
-                    <TableCell className={this.props.classes.cellSep}>{m.postponed ? 'yes' : 'no'}</TableCell>
                   </TableRow>
                 })}
               </TableBody>
