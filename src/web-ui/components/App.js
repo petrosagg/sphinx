@@ -6,12 +6,20 @@ import {
   Toolbar,
   Typography
 } from 'material-ui'
+import { withStyles } from 'material-ui/styles'
 
 import router from '../router'
 import relay from '../relay'
 import history from '../history'
 
-export default class App extends React.Component {
+const styles = theme => ({
+  title: {
+    color: 'white',
+    textDecoration: 'none'
+  }
+})
+
+class App extends React.Component {
   constructor () {
     super()
     this.state = {
@@ -39,9 +47,11 @@ export default class App extends React.Component {
     return <div>
       <AppBar position='static'>
         <Toolbar>
-          <Typography type='title' color='inherit' onClick={() => history.push('/')}>
-            Sphinx
-          </Typography>
+          <a className={this.props.classes.title} href='#'>
+            <Typography type='title' color='inherit' onClick={() => history.push('/')}>
+              Sphinx
+            </Typography>
+          </a>
         </Toolbar>
       </AppBar>
       {props ? this.state.render(props) : <LinearProgress mode='query' color='accent' />}
@@ -53,3 +63,5 @@ export default class App extends React.Component {
     return <QueryRenderer environment={relay} query={s.query} variables={s.params} render={opts => this.renderState(opts)} />
   }
 }
+
+export default withStyles(styles)(App)
