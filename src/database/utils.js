@@ -1,3 +1,5 @@
+const memoize = require('memoizee')
+
 const parseScore = exports.parseScore = (str) => {
   const postponed = /P\s*-\s*P/g
 
@@ -19,7 +21,7 @@ const parseScore = exports.parseScore = (str) => {
   return [ false, home, away ]
 }
 
-exports.parseMatch = ($, match) => {
+const parseMatch = ($, match) => {
   try {
     const homeTeam = $('.team2', match).text() || $('.team4', match).text()
     const homeUrl = $('.team2 a', match).attr('href') || $('.team4 a', match).attr('href')
@@ -55,3 +57,5 @@ exports.parseMatch = ($, match) => {
     throw new Error('Error ' + e + " Couldn't parse " + $(match).html())
   }
 }
+
+exports.parseMatch = memoize(parseMatch, { maxAge: 60 * 1000 })
