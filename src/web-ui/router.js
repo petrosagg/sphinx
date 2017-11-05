@@ -1,3 +1,4 @@
+import React from 'react'
 import UniversalRouter from 'universal-router'
 import { graphql } from 'relay-runtime'
 
@@ -14,16 +15,16 @@ const routes = [
         ...CountryList
       }
     `,
-    component: CountryList,
+    render: props => <CountryList data={props} />
   },
   {
     path: '/country/:id',
     query: graphql`
       query router_CountryQuery($id: String) {
-          ...Country
+        ...Country
       }
     `,
-    component: Country
+    render: props => <Country data={props} />
   },
   {
     path: '/league/:id',
@@ -32,7 +33,7 @@ const routes = [
         ...League
       }
     `,
-    component: League
+    render: props => <League data={props} />
   },
   {
     path: '/season/:id',
@@ -41,10 +42,10 @@ const routes = [
         ...Season
       }
     `,
-    component: Season
+    render: props => <Season data={props} />
   }
 ]
 
-const resolveRoute = ({ route, next }, params) => route.component ? { ...route, params } : next()
+const resolveRoute = ({ route, next }, params) => route.render ? { ...route, params } : next()
 
 export default new UniversalRouter(routes, { resolveRoute })

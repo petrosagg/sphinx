@@ -1,5 +1,5 @@
 import React from 'react'
-import { graphql, QueryRenderer } from 'react-relay'
+import { QueryRenderer } from 'react-relay'
 import {
   AppBar,
   CircularProgress,
@@ -10,15 +10,14 @@ import {
 import router from '../router'
 import relay from '../relay'
 import history from '../history'
-import CountryList from './CountryList'
-import Country from './Country'
-import League from './League'
-import Season from './Season'
 
 export default class App extends React.Component {
   constructor () {
     super()
-    this.state = {}
+    this.state = {
+      params: {},
+      render: () => null
+    }
   }
 
   unlisten: () => void
@@ -36,12 +35,8 @@ export default class App extends React.Component {
     return router.resolve(location).then(route => this.setState(route))
   }
 
-  handleCountryClick (countryId) {
-    history.push('/country/' + countryId)
-  }
-
-  renderState ({ error, props, retry }) {
-    const title = (
+  renderState ({ props }) {
+    return <div>
       <AppBar position='static'>
         <Toolbar>
           <Typography type='title' color='inherit' onClick={() => history.push('/')}>
@@ -49,35 +44,12 @@ export default class App extends React.Component {
           </Typography>
         </Toolbar>
       </AppBar>
-    )
-
-    if (this.state.component && props) {
-      return (
-        <div>
-          {title}
-          <this.state.component data={props} />
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          {title}
-          <CircularProgress />
-        </div>
-      )
-    }
+      {props ? this.state.render(props) : <CircularProgress />}
+    </div>
   }
 
   render () {
-    return (
-      <QueryRenderer
-        environment={relay}
-        query={this.state.query}
-        variables={{
-          ...this.state.params
-        }}
-        render={this.renderState.bind(this)}
-      />
-    )
+    const s = this.state
+    return <QueryRenderer environment={relay} query={s.query} variables={s.params} render={opts => this.renderState(opts)} />
   }
 }
