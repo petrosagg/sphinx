@@ -1,48 +1,61 @@
-const pathModule = require('path')
-
 const fetch = require('../fetch')
 const utils = require('../utils')
 
 exports.getUpcomingMatches = (season) => {
-  return fetch(pathModule.join(season.id, 'fixtures')).then(($) => (
-    $('#statLF table.stat tr:not(.timezonebar)')
-    .toArray()
-    .map((match) => utils.parseMatch($, match))
-    .map((match) => {
-      match.season = season
-      return match
-    })
-  ))
+  return fetch(`/v2/competition/${season.id}/fixtures`).then((d) => {
+    return d.matches.list
+      .filter(m => m.status_id === 1)
+      .map(m => {
+        return {
+          id: m.id,
+          league: d.leagues.list.find(l => l.id === m.league_id),
+          home: utils.getTeam(d.teams.list, m.home.team_id),
+          away: utils.getTeam(d.teams.list, m.guest.team_id),
+          postponed: false,
+          friendly: d.leagues.list.find(l => l.id === m.league_id).name.includes('Friend'),
+          homeScore: m.home.results[0],
+          awayScore: m.guest.results[0],
+          homeScoreHT: m.home.results[1],
+          awayScoreHT: m.guest.results[1],
+          timestamp: m.start_date,
+          _typeName: 'Match'
+        }
+      })
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .slice(0, 100)
+  })
 }
 
 exports.getMatches = (season) => {
-  return fetch(pathModule.join(season.id, 'results')).then(($) => (
-    $('#statLR table.stat tr:not(.timezonebar)')
-    .toArray()
-    .map((match) => utils.parseMatch($, match))
-    .map((match) => {
-      match.season = season
-      return match
-    })
-  ))
+  return fetch(`/v2/competition/${season.id}/fixtures`).then((d) => {
+    return d.matches.list
+      .filter(m => m.status_id === 5)
+      .map(m => {
+        return {
+          id: m.id,
+          league: d.leagues.list.find(l => l.id === m.league_id),
+          home: utils.getTeam(d.teams.list, m.home.team_id),
+          away: utils.getTeam(d.teams.list, m.guest.team_id),
+          postponed: false,
+          friendly: d.leagues.list.find(l => l.id === m.league_id).name.includes('Friend'),
+          homeScore: m.home.results[0],
+          awayScore: m.guest.results[0],
+          homeScoreHT: m.home.results[1],
+          awayScoreHT: m.guest.results[1],
+          timestamp: m.start_date,
+          _typeName: 'Match'
+        }
+      })
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, 100)
+  })
 }
 
 exports.get = (id) => {
-  return fetch(id).then(($) => {
-    const $league = $('div.navbar div.nav2 select option[selected=selected]')
-
-    return $('div.desc select option').toArray().map($)
-    .map(($el) => {
-      return {
-        id: $el.attr('value'),
-        name: $el.text().trim(),
-        league: {
-          id: $league.attr('value'),
-          name: $league.text().trim()
-        },
-        _typeName: 'Season'
-      }
-    })
-    .filter((season) => season.id === id)[0]
+  return fetch(`/v2/competition/${id}/fixtures`).then((d) => {
+    d.season.id = id
+    d.season.league = d.competitions.list[0]
+    d.season._typeName = 'Season'
+    return d.season
   })
 }

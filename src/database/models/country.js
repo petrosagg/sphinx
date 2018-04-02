@@ -1,28 +1,19 @@
 const fetch = require('../fetch')
 
-exports.getLeagues = (country) => {
-  return fetch('ml/subLeagues/?CountryId=' + country.id, { xhr: true }).then(($) => {
-    return $('li.league').toArray().map($)
-    .map(($el) => {
-      return {
-        id: $('a', $el).attr('href'),
-        name: $el.text().trim(),
-        country: country
-      }
-    })
+exports.getLeagues = country => {
+  return fetch('/v2/competitions').then((d) => {
+    return d.competitions.list.filter(c => c.country_id === country.id)
   })
 }
 
 exports.getAll = () => {
-  return fetch('/').then(($) => {
-    return $('.menu .national.list .countries > li').toArray().map($)
-    .map(($el) => {
-      return {
-        id: $el.attr('data-id'),
-        name: $el.text().trim(),
-        _typeName: 'Country'
-      }
-    })
+  return fetch('/v2/competitions').then((data) => {
+    return data.countries.list
+      .map(c => {
+        c._typeName = 'Country'
+        return c
+      })
+      .sort((a, b) => a.name.localeCompare(b.name))
   })
 }
 

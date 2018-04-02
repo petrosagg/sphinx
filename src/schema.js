@@ -18,7 +18,7 @@ const database = require('./database')
 
 const resolveNode = (globalId) => {
   const { type, id } = fromGlobalId(globalId)
-  return database.getNode[type](id)
+  return database.getNode[type](Number(id))
 }
 
 const { nodeInterface, nodeField } = nodeDefinitions(resolveNode, (obj) => schema._typeMap[obj._typeName])
