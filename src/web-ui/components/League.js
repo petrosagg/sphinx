@@ -26,7 +26,7 @@ class League extends React.Component {
         <Grid xs={6} item>
           <Paper className={this.props.classes.root}>
             <Typography variant='headline'>
-              {league.country.name} > {league.name}
+              {league.country.name} » {league.name}
             </Typography>
             <Divider />
             <SeasonList seasons={league.seasons.edges.map(e => e.node)} />
