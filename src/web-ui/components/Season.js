@@ -174,12 +174,12 @@ class Season extends React.Component {
       <Grid justify='center' spacing={0} container>
         <Grid item>
           <Paper className={this.props.classes.root}>
-            <Typography type='title'>
+            <Typography variant='title'>
               {season.league.country.name} » {season.league.name} » {season.name}
             </Typography>
           </Paper>
           <Paper className={this.props.classes.root}>
-            <Typography type='subheading'>
+            <Typography variant='subheading'>
               Future Matches
               <CSVLink
                 data={futureCSVData}
@@ -190,7 +190,7 @@ class Season extends React.Component {
                   (new Date()).toISOString().slice(0, 10)
                 ].join('-') + '.csv'
               }>
-                <Button className={this.props.classes.csvButton} raised color='primary'>
+                <Button className={this.props.classes.csvButton} variant='raised' color='primary'>
                   Download
                 </Button>
               </CSVLink>
@@ -232,7 +232,7 @@ class Season extends React.Component {
             </Table>
           </Paper>
           <Paper className={this.props.classes.root}>
-            <Typography type='subheading'>
+            <Typography variant='subheading'>
               Past Matches
               <CSVLink
                 data={pastCSVData}
@@ -243,7 +243,7 @@ class Season extends React.Component {
                   (new Date()).toISOString().slice(0, 10)
                 ].join('-') + '.csv'
               }>
-                <Button className={this.props.classes.csvButton} raised color='primary'>
+                <Button className={this.props.classes.csvButton} variant='raised' color='primary'>
                   Download
                 </Button>
               </CSVLink>

@@ -48,13 +48,13 @@ class App extends React.Component {
       <AppBar position='static'>
         <Toolbar>
           <a className={this.props.classes.title} href='#'>
-            <Typography type='title' color='inherit' onClick={() => history.push('/')}>
+            <Typography variant='title' color='inherit' onClick={() => history.push('/')}>
               Sphinx
             </Typography>
           </a>
         </Toolbar>
       </AppBar>
-      {props ? this.state.render(props) : <LinearProgress mode='query' color='accent' />}
+      {props ? this.state.render(props) : <LinearProgress mode='query' color='secondary' />}
     </div>
   }
 

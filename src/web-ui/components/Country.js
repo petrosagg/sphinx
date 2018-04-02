@@ -25,7 +25,7 @@ class Country extends React.Component {
       <Grid justify='center' spacing={0} container>
         <Grid xs={6} item>
           <Paper className={this.props.classes.root}>
-            <Typography type='headline'>
+            <Typography variant='headline'>
               {country.name}
             </Typography>
             <Divider />
