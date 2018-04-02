@@ -21,7 +21,8 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       '/graphql': 'http://localhost:4000'
-    }
+    },
+    port: process.env.PORT || 8000
   },
   output: {
     publicPath: '/',
