@@ -13,6 +13,7 @@ exports.getAll = () => {
         c._typeName = 'Country'
         return c
       })
+      .filter(c => c.national)
       .sort((a, b) => a.name.localeCompare(b.name))
   })
 }
